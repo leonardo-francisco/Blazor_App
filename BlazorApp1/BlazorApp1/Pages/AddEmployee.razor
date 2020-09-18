@@ -1,0 +1,63 @@
+﻿@page "/addemployee"
+@attribute [Authorize]
+@using BlazorApp1.Data
+@inject EmployeeService emp
+@inject NavigationManager NavigationManager
+@inject Blazored.Toast.Services.IToastService toastService
+
+<h2>Add Employee</h2>
+<hr />
+
+<form>
+    <div class="row">
+        <div class="col-md-8">
+            <div class="form-group">
+                <label for="Name" class="control-label">Nome</label>
+                <input form="Name" class="form-control" @bind="@empobj.Name" />
+            </div>
+            <div class="form-group">
+                <label for="Department" class="control-label">Departamento</label>
+                <input form="Department" class="form-control" @bind="@empobj.Department" />
+            </div>
+            <div class="form-group">
+                <label for="City" class="control-label">Cidade</label>
+                <input form="City" class="form-control" @bind="@empobj.City" />
+            </div>
+            <div class="form-group">
+                <label for="Country" class="control-label">Pais</label>
+                <input form="Country" class="form-control" @bind="@empobj.Country" />
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-4">
+            <div class="form-group">
+                <input type="button" class="btn btn-primary" @onclick="@CreateEmployee" value="Save" />
+                <input type="button" class="btn btn-danger" @onclick="@Cancel" value="Cancel" />
+            </div>
+        </div>
+    </div>
+</form>
+
+@code {
+    Employee empobj = new Employee();
+
+    protected void CreateEmployee()
+    {
+        if (empobj.Name == null && empobj.Department == null && empobj.City == null && empobj.Country == null)
+        {
+            toastService.ShowError("You cant input employee data null", "Error");
+        }
+        else
+        {
+            emp.Create(empobj);
+            toastService.ShowSuccess("Add employee successfuly", "Congratulations");
+            NavigationManager.NavigateTo("addemployee");
+        }
+
+    }
+    void Cancel()
+    {
+        NavigationManager.NavigateTo("gridemployee");
+    }
+}

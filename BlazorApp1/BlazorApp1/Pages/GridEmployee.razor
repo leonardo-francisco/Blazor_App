@@ -1,0 +1,41 @@
+﻿@page "/gridemployee"
+@attribute [Authorize]
+@using BlazorApp1.Data
+@using  System.Collections.ObjectModel
+@inject EmployeeService emp
+
+<NavLink class="nav-link" href="addemployee">
+    <span class="oi oi-plus" aria-hidden="true"></span> Add Employee
+</NavLink>
+
+<h1>Employee Information</h1>
+
+
+<DxDataGrid Data="@empobj" PageSize="10" RowUpdating="@OnRowUpdating" RowRemoving="@OnRowRemoving">
+    <DxDataGridCommandColumn Width="150px"></DxDataGridCommandColumn>
+    <DxDataGridColumn Field="@nameof(Employee.Name)" Caption="Nome" />
+    <DxDataGridColumn Field="@nameof(Employee.Department)" Caption="Departamento" />
+    <DxDataGridColumn Field="@nameof(Employee.City)" Caption="Cidade" />
+    <DxDataGridColumn Field="@nameof(Employee.Country)" Caption="País" />
+</DxDataGrid>
+
+
+
+@code{
+    List<Employee> empobj;
+    protected override void OnInitialized()
+    {
+        empobj = emp.GetEmployee();
+    }
+
+    void OnRowUpdating(Employee epp, IDictionary<string, object> newValue)
+    {
+        emp.UpdateEmployee(epp);
+    }
+
+    void OnRowRemoving(Employee dataItem)
+    {
+        emp.DeleteEmployee(dataItem);
+
+    }
+}
